@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      K_SERVICE: "dev"
+      K_CONFIGURATION: "dev"
+      K_REVISION: "dev-00001"
+      GOOGLE_APPLICATION_CREDENTIALS: "/tmp/keys/KEY.json"
+    volumes:
+    - $GOOGLE_APPLICATION_CREDENTIALS:/tmp/keys/KEY.json:ro
