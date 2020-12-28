@@ -1,12 +1,12 @@
-# fastapi-todo-app
-simple To-do app implemented in FastAPI web framework
+# customer management service
+Customer management system app implemented with FastAPI web framework
 
 ## Installation
 Clone this repo and create a virtual environment:
 
 ```
-git clone https://github.com/DigitalRealState/fastapi-todo-app.git
-cd fastapi-todo-app
+git clone https://github.com/tabris2015/customer-management-service.git
+cd customer-management-service
 virtualenv -p python3 venv
 ```
 
@@ -35,7 +35,7 @@ docker build -t fastapi-todo .
 ```
 Once built, you can run it with:
 ```
-docker run -p "8000:8000" -t fastapi-todo
+docker run -p "8000:8000" -t customer-management-service
 ```
 the server will be available at `http://127.0.0.1:8000`
 

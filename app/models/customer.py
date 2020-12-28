@@ -4,26 +4,26 @@ from pydantic import BaseModel, Field
 from app.models.db_base import DBBase
 
 
-class TodoBase(BaseModel):
-    """Base Model for Todo object, it has the base fields"""
-    text: str
-    priority: int
+class CustomerBase(BaseModel):
+    first_name: str
+    middle_name: str
+    last_name: str
+    # add accounts
 
 
-class TodoCreate(TodoBase, DBBase):
-    """Todo model for database"""
+class CustomerCreate(CustomerBase, DBBase):
     pass
 
 
-class TodoUpdate(TodoBase):
+class CustomerUpdate(CustomerBase):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
-class TodoIn(TodoBase):
+class CustomerIn(CustomerBase):
     pass
 
 
-class Todo(TodoBase):
+class Customer(CustomerBase):
     id: UUID
     created_at: datetime
     updated_at: datetime

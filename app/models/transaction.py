@@ -1,29 +1,27 @@
 from datetime import datetime
+from decimal import Decimal
 from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 from app.models.db_base import DBBase
 
 
-class TodoBase(BaseModel):
-    """Base Model for Todo object, it has the base fields"""
-    text: str
-    priority: int
+class TransactionBase(BaseModel):
+    amount: Decimal
 
 
-class TodoCreate(TodoBase, DBBase):
-    """Todo model for database"""
+class TransactionCreate(TransactionBase, DBBase):
     pass
 
 
-class TodoUpdate(TodoBase):
+class TransactionUpdate(TransactionBase):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
-class TodoIn(TodoBase):
+class TransactionIn(TransactionBase):
     pass
 
 
-class Todo(TodoBase):
+class Transaction(TransactionBase):
     id: UUID
     created_at: datetime
     updated_at: datetime

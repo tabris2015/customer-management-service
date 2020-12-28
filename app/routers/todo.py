@@ -14,15 +14,7 @@ todo_service = TodoService()
 @router.post('/', response_model=Todo, status_code=status.HTTP_201_CREATED)
 async def create_todo(todo_create: TodoIn = Body(...)):
     """Create a Todo task"""
-    now = datetime.utcnow()
-    return todo_service.create_todo(
-        TodoCreate(
-            **todo_create.dict(),
-            id=uuid4(),
-            created_at=now,
-            updated_at=now
-        )
-    )
+    return todo_service.create_todo(TodoCreate(**todo_create.dict()))
 
 
 @router.get('/', response_model=List[Todo])
