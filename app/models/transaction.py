@@ -6,7 +6,9 @@ from app.models.db_base import DBBase
 
 
 class TransactionBase(BaseModel):
-    amount: Decimal
+    account_id: str
+    amount: float
+    status: str
 
 
 class TransactionCreate(TransactionBase, DBBase):
@@ -14,7 +16,7 @@ class TransactionCreate(TransactionBase, DBBase):
 
 
 class TransactionUpdate(TransactionBase):
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    pass
 
 
 class TransactionIn(TransactionBase):

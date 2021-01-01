@@ -1,7 +1,7 @@
 import os                           # para obtener variables de entorno
 import uvicorn                      # servidor ASGI para correr fastapi
 from fastapi import FastAPI         # modulo principal para el servicio web
-from .routers import todo           # rutas
+from .routers import todo, transaction           # rutas
 
 os.environ['TZ'] = 'UTC'            # zona horaria UTC
 
@@ -11,6 +11,7 @@ app = FastAPI(title=f'To-do app: {title_detail}', version=version)
 
 # routers
 app.include_router(todo.router, tags=['To-do'], prefix='/todos')
+app.include_router(transaction.router, tags=['Transactions'], prefix='/transactions')
 
 
 # healthcheck
