@@ -1,17 +1,15 @@
 import os                           # para obtener variables de entorno
 import uvicorn                      # servidor ASGI para correr fastapi
 from fastapi import FastAPI         # modulo principal para el servicio web
-from .routers import todo, transaction           # rutas
+import settings
+from .routers import todo, transaction, client           # rutas
 
-os.environ['TZ'] = 'UTC'            # zona horaria UTC
-
-title_detail = os.getenv('K_SERVICE', 'Local')     # obtener id del proyecto en produccion
-version = os.getenv('K_REVISION', 'local')           # obtener version del deployment en prod
-app = FastAPI(title=f'To-do app: {title_detail}', version=version)
+app = FastAPI(title=f'To-do app: {settings.TITLE}', version=settings.VERSION)
 
 # routers
 app.include_router(todo.router, tags=['To-do'], prefix='/todos')
 app.include_router(transaction.router, tags=['Transactions'], prefix='/transactions')
+app.include_router(client.router, tags=['Clients'], prefix='/clients')
 
 
 # healthcheck
