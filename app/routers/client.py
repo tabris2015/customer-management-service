@@ -12,7 +12,6 @@ client_service = ClientService()
 @router.post('/', response_model=Client, status_code=status.HTTP_201_CREATED)
 async def create_client(client_create: ClientIn = Body(...)):
     """Create a Client task"""
-    print(client_create)
     return client_service.create_client(ClientCreate(**client_create.dict()))
 
 

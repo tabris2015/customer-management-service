@@ -1,5 +1,7 @@
+import sys
 import logging
-import settings
+import app.settings as settings
 
-LOGGER = logging.getLogger()
+LOGGER = logging.getLogger('fastapi')
 LOGGER.setLevel(settings.LOG_LEVEL)
+LOGGER.addHandler(logging.StreamHandler(sys.stdout))
