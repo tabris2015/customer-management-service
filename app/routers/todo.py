@@ -11,13 +11,13 @@ router = APIRouter()
 todo_service = TodoService()
 
 
-@router.post('/', response_model=Todo, status_code=status.HTTP_201_CREATED)
+@router.post('/todos/', response_model=Todo, status_code=status.HTTP_201_CREATED)
 async def create_todo(todo_create: TodoIn = Body(...)):
     """Create a Todo task"""
     return todo_service.create_todo(TodoCreate(**todo_create.dict()))
 
 
-@router.get('/', response_model=List[Todo])
+@router.get('/todos/', response_model=List[Todo])
 async def get_todos():
     """Get all Todo tasks"""
     todos = todo_service.list_todos()
@@ -26,7 +26,7 @@ async def get_todos():
     return todos
 
 
-@router.get('/{id}', response_model=Todo)
+@router.get('/todos/{id}', response_model=Todo)
 async def get_todo(id: str):
     """Get a particular Todo by id"""
     todo = todo_service.get_todo(id)
@@ -35,7 +35,7 @@ async def get_todo(id: str):
     return todo
 
 
-@router.put('/{id}', response_model=Todo)
+@router.put('/todos/{id}', response_model=Todo)
 async def update_todo(id: str, todo_update: TodoUpdate = Body(...)):
     """Update a Todo task"""
     todo = todo_service.get_todo(id)
@@ -44,7 +44,7 @@ async def update_todo(id: str, todo_update: TodoUpdate = Body(...)):
     return todo_service.update_todo(id, todo_update)
 
 
-@router.delete('/{id}', response_model=Todo)
+@router.delete('/todos/{id}', response_model=Todo)
 async def delete_todo(id: str):
     """Delete a todo task"""
     todo = todo_service.get_todo(id)

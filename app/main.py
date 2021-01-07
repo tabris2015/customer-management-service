@@ -15,10 +15,10 @@ app.add_middleware(
     allow_headers=['*']
     )
 # routers
-app.include_router(todo.router, tags=['To-do'], prefix='/todos')
-app.include_router(transaction.router, tags=['Transactions'], prefix='/transactions')
-app.include_router(client.router, tags=['Clients'], prefix='/clients')
-app.include_router(account.router, tags=['Accounts'], prefix='/accounts')
+app.include_router(todo.router, tags=['To-do'])
+app.include_router(transaction.router, tags=['Transactions'])
+app.include_router(client.router, tags=['Clients'])
+app.include_router(account.router, tags=['Accounts'])
 
 
 # healthcheck

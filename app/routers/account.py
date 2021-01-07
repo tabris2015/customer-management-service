@@ -9,13 +9,13 @@ router = APIRouter()
 account_service = AccountService()
 
 
-@router.post('/', response_model=Account, status_code=status.HTTP_201_CREATED)
+@router.post('/accounts/', response_model=Account, status_code=status.HTTP_201_CREATED)
 async def create_account(account_create: AccountIn = Body(...)):
     """Create a Account task"""
     return account_service.create_account(AccountCreate(**account_create.dict()))
 
 
-@router.get('/', response_model=List[Account])
+@router.get('/accounts/', response_model=List[Account])
 async def get_accounts(client_id: str):
     """Get all Account tasks"""
     accounts = account_service.list_accounts(client_id)
@@ -24,7 +24,7 @@ async def get_accounts(client_id: str):
     return accounts
 
 
-@router.get('/{id}', response_model=Account)
+@router.get('/accounts/{id}', response_model=Account)
 async def get_account(id: str, client_id: str):
     """Get a particular Account by id"""
     account = account_service.get_account(client_id, id)
@@ -33,7 +33,7 @@ async def get_account(id: str, client_id: str):
     return account
 
 
-@router.put('/{id}', response_model=Account)
+@router.put('/accounts/{id}', response_model=Account)
 async def update_account(id: str, client_id: str, account_update: AccountUpdate = Body(...)):
     """Update a Account task"""
     account = account_service.get_account(client_id, id)
@@ -42,7 +42,7 @@ async def update_account(id: str, client_id: str, account_update: AccountUpdate 
     return account_service.update_account(client_id, id, account_update)
 
 
-@router.delete('/{id}', response_model=Account)
+@router.delete('/accounts/{id}', response_model=Account)
 async def delete_account(id: str, client_id: str):
     """Delete a account task"""
     account = account_service.get_account(client_id, id)
