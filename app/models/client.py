@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.models.db_base import TimestampDBBase
 from app.models.account import Account
 
@@ -19,6 +19,8 @@ class ClientCreate(ClientBase, TimestampDBBase):
 
 class ClientUpdate(ClientBase):
     name: Optional[str]
+    accounts: Optional[List[Account]]
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class ClientIn(ClientBase):
