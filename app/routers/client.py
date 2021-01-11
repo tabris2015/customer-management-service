@@ -3,13 +3,16 @@ from fastapi import status
 from typing import List
 from app.models.client import Client, ClientCreate, ClientUpdate, ClientIn
 from app.models.account import Account, AccountIn, AccountCreate, AccountUpdate
+from app.models.transaction import Transaction, TransactionCreate, TransactionUpdate, TransactionIn
 from app.services.client import ClientService
 from app.services.account import AccountService
+from app.services.transaction import TransactionService
 
 
 router = APIRouter()
 client_service = ClientService()
 account_service = AccountService()
+transaction_service = TransactionService()
 
 
 @router.post('/clients/', response_model=Client, status_code=status.HTTP_201_CREATED)
@@ -93,3 +96,47 @@ async def update_client_account(id: str, account_id: str, account_update: Accoun
     if not account:
         raise HTTPException(status_code=404, detail='Account not found')
     return account_service.update_account(client, account_id, account_update)
+
+
+@router.post(
+    '/clients/{id}/accounts/{account_id}/transactions',
+    response_model=Transaction,
+    status_code=status.HTTP_201_CREATED)
+async def create_client_transaction(id: str, account_id: str, transaction_data: TransactionIn):
+    if id != transaction_data.client_id or account_id != transaction_data.account_id:
+        raise HTTPException(status_code=400, detail='error creating transaction')
+    client = client_service.get_client(transaction_data.client_id)
+    if not client:
+        raise HTTPException(status_code=404, detail='client not found')
+
+    account = account_service.get_account(client, transaction_data.account_id)
+    if not account:
+        raise HTTPException(status_code=404, detail='account not found')
+
+    balance = account.balance
+
+    transaction = transaction_service.create_transaction(TransactionCreate(**transaction_data.dict()))
+    if not transaction:
+        raise HTTPException(status_code=400, detail='error creating transaction')
+
+    new_balance = balance + transaction_data.amount
+    # update account balance
+    updated_account = account_service.update_account(client, account.id, AccountUpdate(balance=new_balance))
+
+    if updated_account.balance != new_balance:
+        raise HTTPException(status_code=400, detail='error updating account balance')
+
+    return transaction
+
+
+@router.get('/clients/{id}/accounts/{account_id}/transactions', response_model=List[Transaction])
+async def get_client_account_transactions(id: str, account_id: str):
+    client = client_service.get_client(id)
+    if not client:
+        raise HTTPException(status_code=404, detail='client not found')
+
+    account = account_service.get_account(client, account_id)
+    if not account:
+        raise HTTPException(status_code=404, detail='account not found')
+
+    return transaction_service.get_transactions_by_account(account.id)
