@@ -24,7 +24,7 @@ app.include_router(account.router, tags=['Accounts'])
 # healthcheck
 @app.get('/')
 def index():
-    return {'status': 'OK'}
+    return {'status': 'Todo blue'}
 
 
 if __name__ == '__main__':
