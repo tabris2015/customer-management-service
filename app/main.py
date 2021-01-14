@@ -2,8 +2,11 @@ import os                           # para obtener variables de entorno
 import uvicorn                      # servidor ASGI para correr fastapi
 from fastapi import FastAPI         # modulo principal para el servicio web
 from fastapi.middleware.cors import CORSMiddleware
+import firebase_admin
 import app.settings as settings
 from .routers import todo, transaction, client, account           # rutas
+
+firebase_admin.initialize_app()
 
 app = FastAPI(title=f'To-do app: {settings.TITLE}', version=settings.VERSION)
 
