@@ -1,19 +1,21 @@
-from datetime import datetime
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Depends, Body, HTTPException
 from fastapi import status
 from typing import List
-from uuid import uuid4
+from fastapi_cloudauth import FirebaseCurrentUser
+from fastapi_cloudauth.firebase import FirebaseClaims
 from app.models.todo import Todo, TodoCreate, TodoUpdate, TodoIn
 from app.services.todo import TodoService
 
 
+get_current_user = FirebaseCurrentUser()
 router = APIRouter()
 todo_service = TodoService()
 
 
 @router.post('/todos/', response_model=Todo, status_code=status.HTTP_201_CREATED)
-async def create_todo(todo_create: TodoIn = Body(...)):
+async def create_todo(todo_create: TodoIn = Body(...), current_user: FirebaseClaims = Depends(get_current_user)):
     """Create a Todo task"""
+    print(current_user)
     return todo_service.create_todo(TodoCreate(**todo_create.dict()))
 
 
