@@ -1,12 +1,18 @@
-from app.models.user import User, UserCreate, UserUpdate, UserIn, UserUpdateIn
+import json
+import requests
+from app.settings import FIREBASE_WEB_API_KEY
+from app.models.user import User, UserCreate, UserUpdate, UserIn, UserUpdateIn, UserLogin
 from firebase_admin import auth
-from fastapi_cloudauth.firebase import FirebaseCurrentUser, FirebaseClaims
 from app.daos.user import UserDAO
 
 
 class AuthenticationService:
+    SIGNIN_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword'
+    EMAIL_VERIFICATION_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode'
+
     def __init__(self):
         self.user_dao = UserDAO()
+        # self.get_current_user = FirebaseCurrentUser()
 
     def register_user(self, user_data: UserIn) -> User:
         # create user with firebase auth
@@ -19,11 +25,6 @@ class AuthenticationService:
         return self.user_dao.create(UserCreate(id=user.uid, **user_data.dict()))
 
     def update_user(self, user_update: UserUpdateIn) -> User:
-        # user_update_firebase = {}
-        # user_data = user_update.dict()
-        # user_update_firebase['email'] = user_data.get('email', None)
-        # user_update_firebase['password'] = user_data.get('password', None)
-        # user_update_firebase['display_name'] = user_data.get('name', None)
         user = auth.update_user(
             user_update.id,
             email=user_update.email,
@@ -32,17 +33,32 @@ class AuthenticationService:
         )
         user_data = UserUpdate(**user_update.dict(exclude={'id'}))
         # update in db
-        return self.user_dao.update(user_update.id, user_data)
+        return self.user_dao.update(user.uid, user_data)
 
+    def delete_user(self, id: str):
+        auth.delete_user(id)
+        self.user_dao.delete(id)
 
-    def delete_user(self):
-        pass
+    def authenticate_user(self, user_login: UserLogin):
+        payload = json.dumps({
+            "email": user_login.email,
+            "password": user_login.password,
+            "returnSecureToken": user_login.return_secure_token
+        })
+        r = requests.post(self.SIGNIN_URL,
+                          params={"key": FIREBASE_WEB_API_KEY},
+                          data=payload)
 
-    def authenticate_user(self):
-        pass
+        return r.json()
 
-    def get_current_user(self):
-        pass
+    def send_email_verification(self, id_token: str):
+        payload = json.dumps({
+            "requestType": "VERIFY_EMAIL",
+            "idToken": id_token
+        })
 
-    def get_tokens(self):
-        pass
+        r = requests.post(self.EMAIL_VERIFICATION_URL,
+                          params={"key": FIREBASE_WEB_API_KEY},
+                          data=payload)
+
+        return r.json()

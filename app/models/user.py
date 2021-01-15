@@ -2,7 +2,12 @@ from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field, EmailStr
 from app.models.db_base import TimestampDBBase
-from app.models.account import Account
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    return_secure_token: bool = True
 
 
 class UserBase(BaseModel):
