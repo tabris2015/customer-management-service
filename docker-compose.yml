@@ -1,14 +1,27 @@
 version: "3.9"
 services:
-  app:
+  backend:
     build: .
     ports:
       - "8000:8000"
     environment:
       PORT: "8000"
-      K_SERVICE: "dev"
-      K_CONFIGURATION: "dev"
-      K_REVISION: "dev-00001"
+      K_SERVICE: "local"
+      K_CONFIGURATION: "local"
+      K_REVISION: "local-00001"
       GOOGLE_APPLICATION_CREDENTIALS: "/tmp/keys/KEY.json"
+      FIRESTORE_EMULATOR_HOST: "firestore:8787"
     volumes:
     - $GOOGLE_APPLICATION_CREDENTIALS:/tmp/keys/KEY.json:ro
+    depends_on:
+      - firestore
+
+  firestore:
+    image: karhoo/firestore-emulator:0.4.3
+    environment:
+      FIRESTORE_PROJECT_ID: "customer-management-local"
+      GCP_PROJECT_ID: "customer-management-local"
+    ports:
+      - "127.0.0.1:8787:8787"
+      - "127.0.0.1:4000:4000"
+    restart: unless-stopped
