@@ -13,8 +13,8 @@ class AccountService:
     def get_account(self, client: Client, id: str) -> Account:
         return account_dao.get(client.id, id)
 
-    def list_accounts(self, client: Client) -> List[Account]:
-        return account_dao.list(client.id)
+    def list_accounts(self, client_id: str) -> List[Account]:
+        return account_dao.list(client_id)
 
     def update_account(self, client: Client, id: str, account_update: AccountUpdate) -> Account:
         return account_dao.update(client.id, id, account_update)
