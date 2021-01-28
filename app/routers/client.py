@@ -57,7 +57,7 @@ async def delete_client(id: str):
     return client_service.delete_client(id)
 
 
-@router.post('/clients/{id}/accounts', response_model=Account, status_code=status.HTTP_201_CREATED)
+@router.post('/clients/accounts', response_model=Account, status_code=status.HTTP_201_CREATED)
 async def create_client_account(account_data: AccountIn):
     client = client_service.get_client(account_data.client_id)
     if not client:
@@ -99,12 +99,10 @@ async def update_client_account(id: str, account_id: str, account_update: Accoun
 
 
 @router.post(
-    '/clients/{id}/accounts/{account_id}/transactions',
+    '/clients/accounts/transactions',
     response_model=Transaction,
     status_code=status.HTTP_201_CREATED)
-async def create_client_transaction(id: str, account_id: str, transaction_data: TransactionIn):
-    if id != transaction_data.client_id or account_id != transaction_data.account_id:
-        raise HTTPException(status_code=400, detail='error creating transaction')
+async def create_client_transaction(transaction_data: TransactionIn):
     client = client_service.get_client(transaction_data.client_id)
     if not client:
         raise HTTPException(status_code=404, detail='client not found')
